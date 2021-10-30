@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+
+  #django backend service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django-backend-admin-app
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    networks:
+      - sagar-custom-network
+    depends_on:
+      - postgres
+      - pgadmin
+  
+  #postgres database service
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    container_name: postgres-server-admin-app
+    environment:
+      POSTGRES_DB: backend-admin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - .dbdata:/var/lib/psql
+    networks:
+      - sagar-custom-network
+  
+  #pgadmin db UI service
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-admin-app
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - 9090:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: sagarsinha1803@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - sagar-custom-network
+
+
+networks:
+  sagar-custom-network:
+    driver: bridge
+      
