@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+
+  #django backend service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flask-backend-main-app
+    ports:
+      - 8001:5000
+    volumes:
+      - .:/app
+    networks:
+      - sagar-flask-main-network
+    depends_on:
+      - mysql
+      - phpmyadmin
+  
+  #mysql database service
+  mysql:
+    image: mysql:latest
+    restart: unless-stopped
+    container_name: mysql-server-main-app
+    environment:
+      MYSQL_DATABASE: backend-main
+      MYSQL_ROOT_PASSWORD:  
+    volumes:
+      - .dbdata:/var/lib/mysql
+    networks:
+      - sagar-flask-main-network
+  
+  #phpmyadmin as mysql-workbench
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: mysql-workbench-main
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    ports:
+      - 9091:80
+    environment:
+      PMA_HOST: mysql
+    networks:
+      - sagar-flask-main-network
+
+
+networks:
+  sagar-flask-main-network:
+    driver: bridge
+      
