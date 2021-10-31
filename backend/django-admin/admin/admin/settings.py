@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'backend-admin',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '172.25.0.2',
+        'HOST': 'postgres',
         'PORT': '5432',
     }
 }
